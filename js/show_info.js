@@ -61,6 +61,8 @@ function switch_page(html) {
     //添加元素事件
     page_element_add_event();
 
+    db_clear_lan_hu_pages_data();
+
     var lanhu_plug_in = document.getElementById("lanhu_plug_in");
     if (lanhu_plug_in != null) {
         lanhu_plug_in.style.display = "";

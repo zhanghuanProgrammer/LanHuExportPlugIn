@@ -28,7 +28,7 @@ function localStorage_removeItem(key){
 }
 
 function curPageKeyMd5(){
-    return hex_md5(window.location.href);
+    return "lan_hu"+hex_md5(window.location.href);
 }
 
 
@@ -170,12 +170,40 @@ function db_removeData(key,type) {
 /**
  * 打印当前页面的所有数据
  */
-function db_printAll() {
+function db_printCurPageAll() {
     if (!db_isSupportStorage())return;
     var pageKeysStr = localStorage.getItem(curPageKeyMd5());
     console.log("pageKeysStr:",pageKeysStr);
     console.log("map:",JSON.stringify(db_getAllData()));
 }
 
+/**
+ * 打印所有数据
+ */
+function db_printAll() {
+    if (!db_isSupportStorage())return;
+    //遍历并输出localStorage里存储的名字和值
+    for(var i=0; i<localStorage.length;i++){
+        console.log('localStorage里存储的第'+i+'条数据的名字为：'+localStorage.key(i)+',值为：'+localStorage.getItem(localStorage.key(i)));
+    }
+}
+
+/**
+ * 清除跟此插件相关所有数据
+ */
+function db_clear_lan_hu_pages_data() {
+    if (!db_isSupportStorage())return;
+    if (localStorage.length < 1000)return;
+    //遍历并输出localStorage里存储的名字和值
+    var count = 0;
+    for(var i=0; i<localStorage.length;i++){
+        var key = localStorage.key(i);
+        if (key.startsWith("lan_hu")){
+            localStorage.removeItem(key);
+            count ++;
+            if (count >= 100)break;//只清除100条
+        }
+    }
+}
 
 //------------------- localStorage数据存储 模块 -------------------

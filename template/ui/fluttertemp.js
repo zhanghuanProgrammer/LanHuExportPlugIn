@@ -13,7 +13,7 @@ function tmpl_flutter_xml() {
         "        height: {%=o.root.height %},\n" +
         "        {% if (o.root.bgColor) { %}color: Color({%=o.root.bgColor %}),{% } %}\n" +
         "        {% if (o.root.views) { %}\n" +
-        "         {% var templateViewsValue = document.getElementById(\"tmpl_flutter_views\").innerHTML;var map = {};map[\"root\"] = o.root.views; var ret = tmpl(templateViewsValue, map); %}\n" +
+        "         {% var templateViewsValue = tmpl_flutter_views();var map = {};map[\"root\"] = o.root.views; var ret = tmpl(templateViewsValue, map); %}\n" +
         "                      {% if(ret) { %}\n" +
         "                      child: Stack(\n" +
         "         fit: StackFit.passthrough,\n" +
@@ -21,8 +21,8 @@ function tmpl_flutter_xml() {
         "         {%=ret%}\n" +
         "         ]\n" +
         "         ),\n" +
-        "                      {% } %}\n" +
-        "                  {% } %}\n" +
+        "         {% } %}\n" +
+        "         {% } %}\n" +
         "       )\n" +
         "    ),";
     return string;
@@ -192,7 +192,7 @@ function tmpl_flutter_views() {
     "        width: {%=viewInfo.width %},\n" +
     "        height: {%=viewInfo.height %},\n" +
     "        {% if (viewInfo.views) { %}\n" +
-    "                      {% var templateViewsValue = document.getElementById(\"tmpl_flutter_views\").innerHTML;var map = {};map[\"root\"] = viewInfo.views; var ret = tmpl(templateViewsValue, map); %}\n" +
+    "                      {% var templateViewsValue = tmpl_flutter_views();var map = {};map[\"root\"] = viewInfo.views; var ret = tmpl(templateViewsValue, map); %}\n" +
     "                      {% if(ret) { %}\n" +
     "                      child: Stack(\n" +
     "         fit: StackFit.passthrough,\n" +
@@ -200,8 +200,8 @@ function tmpl_flutter_views() {
     "         {%=ret%}\n" +
     "         ]\n" +
     "         ),\n" +
-    "                      {% } %}\n" +
-    "                  {% } %}\n" +
+    "         {% } %}\n" +
+    "         {% } %}\n" +
     "       )\n" +
     "    ),\n" +
     "          {% } %}\n" +
