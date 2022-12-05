@@ -1,0 +1,17 @@
+{
+	"name": "蓝",
+	"version": "1.0",
+	"manifest_version": 2,
+	"description": "蓝湖插件",
+	"browser_action": {
+		"default_popup": "popup.html",
+		"default_title": "蓝湖插件",
+		"default_icon": "icon.png"
+	},
+	"permissions": ["clipboardWrite", "contextMenus", "tabs", "<all_urls>", "storage"],
+	"content_scripts": [{
+		"js": ["popup.js"],
+		"matches": ["http://*/*", "https://*/*"]
+	}],
+	"content_security_policy": "script-src 'self' 'unsafe-eval' https://cdn.staticfile.org; object-src 'self'"
+}

@@ -1,0 +1,143 @@
+function extractFilename(path) {
+	var pathArray = path.split("/");
+	var lastIndex = pathArray.length - 1;
+	return pathArray[lastIndex];
+};
+
+function extractDirectoryPath(path) {
+	var pathArray = path.split("/");
+	return pathArray;
+};
+
+function toolJsContent() {
+    var content = document.getElementById('toolJsContent').innerHTML;//操作模板数据
+    return content;
+};
+
+function toolCssContent() {
+    var content = document.getElementById('toolCssContent').innerHTML;//操作模板数据
+    return content;
+};
+
+function fileSaverContent() {
+    var content = document.getElementById('fileSaverContent').innerHTML;
+    return content;
+};
+
+function jszipContent() {
+    var content = document.getElementById('jszipContent').innerHTML;
+    return content;
+};
+
+function headWriteCssJsContent() {
+    var content =
+        "    <link rel=\"stylesheet\" type=\"text\/css\" href=\".\/tools.css\" \/>\n    <script src=\"https:\/\/cdn.staticfile.org\/jquery\/1.10.2\/jquery.min.js\" \/>\n<\/script>\n";
+    return content;
+};
+
+function bodyWriteCssJsContent() {
+    var content =
+        "<script src=\"FileSaver.js\"><\/script>\n<script src=\"jszip.js\"><\/script>\n<script src=\"tools.js\"><\/script>\n";
+    return content;
+};
+
+var reader_onload_count = 0;
+var map = {};
+var selectFiles;
+var reader_index = 0;
+var zipTool;
+
+function readFileContinueOrDone() {
+    if (reader_index + 1 == selectFiles.length) {
+        zipTool.generateAsync({
+                type: "blob"
+            })
+            .then(function(content) {
+                saveAs(content, "项目.zip");
+            });
+    } else {
+        reader_index++;
+        readFileRecursive();
+    }
+}
+
+function readFileRecursive() {
+    if (reader_index < selectFiles.length) {
+        var file = selectFiles[reader_index];
+        var name = file.name; //读取选中文件的文件名
+        var path = file.webkitRelativePath;
+        if (name.startsWith('.')) {
+            readFileContinueOrDone();
+            return;
+        }
+        //文本文件
+        if (name.endsWith(".html") || name.endsWith(".js") || name.endsWith(".css")) {
+            var reader = new FileReader();
+            reader.readAsText(file);
+            reader.onload = function(event) {
+                var content = this.result;
+                var zipTool_copy = zipTool;
+                if (path.includes("/")) {
+                    var filePaths = extractDirectoryPath(path);
+                    for (var i = 0; i < filePaths.length; i++) {
+                        var directory = filePaths[i];
+                        if (directory.includes(".")) continue;
+                        zipTool_copy = zipTool_copy.folder(directory);
+                    }
+                }
+                //插入js引入
+                if (!content.includes("tools.js")) {
+                    content = content.replace("</head>", headWriteCssJsContent() + "</head>");
+					content = content.replace("</body>", bodyWriteCssJsContent() + "</body>");
+                }
+
+                zipTool_copy.file(name, content);
+                if (name.endsWith(".html")) {
+                    zipTool_copy.file("tools.js", toolJsContent());
+                    zipTool_copy.file("tools.css", toolCssContent());
+                    zipTool_copy.file("jszip.js", jszipContent());
+                    zipTool_copy.file("FileSaver.js", fileSaverContent());
+                }
+                readFileContinueOrDone();
+            };
+        }
+        //图片文件
+        else if (name.endsWith(".png") || name.endsWith(".jpg") || name.endsWith(".jpeg") ||
+            name.endsWith(".PNG") || name.endsWith(".JPG") || name.endsWith(".JPEG")) {
+            var reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function() {
+                //添加图片到页面中
+                var result = this.result;
+                if (result.includes(",")) {
+                    result = result.substring(result.indexOf(","));
+                }
+                var zipTool_copy = zipTool;
+                if (path.includes("/")) {
+                    var filePaths = extractDirectoryPath(path);
+                    for (var i = 0; i < filePaths.length; i++) {
+                        var directory = filePaths[i];
+                        if (directory.includes(".")) continue;
+                        zipTool_copy = zipTool_copy.folder(directory);
+                    }
+                }
+                zipTool_copy.file(name, result, {
+                    base64: true
+                });
+                readFileContinueOrDone();
+            };
+        } else {
+            readFileContinueOrDone();
+        }
+    }
+};
+
+function dealSelectFiles() {
+	selectFiles = document.getElementById("selectFiles").files;
+	zipTool = new JSZip();
+	readFileRecursive(reader_index, selectFiles, zipTool);
+}
+
+document.getElementById('selectFiles').addEventListener('change', function () {
+  dealSelectFiles()
+});
