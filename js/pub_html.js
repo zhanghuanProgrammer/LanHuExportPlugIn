@@ -114,8 +114,8 @@ function tmpl_set_dialog() {
         "            1.支持自动生成约束<br>\n" +
         "            2.支持用户自定义语言模板<br><br>\n" +
         "            备注:使用中如有疑问或Bug,可查看帮助,或加QQ群:481431442(无需验证),或联系开发者微信号:13077821373(无需验证),欢迎打扰,纯粹本着开源精神,能帮助到大家就足够了<br><br>\n" +
-        "            开源地址1:<a href=\"https://github.com/zhanghuanProgrammer/LanHuExport\" target=\"_blank\">GitHub开源地址</a><br>\n" +
-        "            开源地址2:<a href=\"https://download.csdn.net/download/qq_35166501/86565258?spm=1001.2014.3001.5503\" target=\"_blank\">CSDN资源下载(不需要币),GitHub访问不了时请从这里下载</a>\n" +
+        "            开源地址1:<a href=\"https://github.com/zhanghuanProgrammer/LanHuExportPlugIn\" target=\"_blank\">GitHub开源地址</a><br>\n" +
+        "            开源地址2:<a href=\"https://download.csdn.net/download/qq_35166501/87245451\" target=\"_blank\">CSDN资源下载(不需要积分),GitHub访问不了时请从这里下载</a>\n" +
         "          </p>\n" +
         "        </div>";
     return string;
